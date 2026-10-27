@@ -157,8 +157,7 @@ async function toggleDebug(shelf) {
   describe();
 
   let view;
-  const Kind = document.body.dataset.shelf === 'cd' ? (await import('./cd-shelf.js')).CdShelf : Shelf;
-  const shelf = new Kind(document.getElementById('iso'), PROJECTS, {
+  const shelf = new Shelf(document.getElementById('iso'), PROJECTS, {
     onOpen: (tile) => view.open(tile.idx, { tile, rect: shelf.screenRect(tile) }),
     onHover,
   });

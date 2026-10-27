@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Archive Sphere</title>
+  <meta name="description" content="An infinite project archive that bends into a sphere when you drag it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://picsum.photos">
+  <link rel="preconnect" href="https://fastly.picsum.photos">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- The whole archive is drawn in WebGL on this canvas -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <!-- Phone version: plain grid, normal scrolling -->
+  <main class="dgrid" id="dgrid" aria-label="Projects"></main>
+
+  <!-- Keyboard / screen-reader access to every project (visually hidden) -->
+  <nav class="sr-only" aria-label="Projects" id="a11y-index"></nav>
+
+  <p class="hint caps" id="hint"><span>Drag or scroll to explore</span><span class="hint__dot"></span><span>Click to open</span></p>
+
+  <!-- Project page -->
+  <section class="pv" aria-hidden="true" aria-label="Project">
+    <div class="pv__bg"></div>
+    <div class="pv__bar">
+      <button class="pv__close caps" type="button">&larr; Index</button>
+      <span class="pv__count caps"></span>
+    </div>
+    <div class="pv__scroll">
+      <article class="pv__inner">
+        <div class="pv__head">
+          <figure class="pv__hero"><img alt="" decoding="async"></figure>
+          <div class="pv__info">
+            <p class="pv__kicker caps reveal"></p>
+            <h1 class="pv__title reveal"></h1>
+            <p class="pv__text reveal"></p>
+            <dl class="pv__meta reveal"></dl>
+          </div>
+        </div>
+        <div class="pv__gallery"></div>
+        <button class="pv__next reveal" type="button">
+          <span class="caps">Next project</span>
+          <strong class="pv__next-title"></strong>
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <!-- The image that flies between the grid and the project page -->
+  <div class="flyer" aria-hidden="true"><img alt="" crossorigin="anonymous"></div>
+
+  <noscript><p class="noscript caps">This archive needs JavaScript and WebGL.</p></noscript>
+
+  <script type="module" src="main.js?v=3"></script>
+</body>
+</html>
