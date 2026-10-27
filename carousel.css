@@ -1,0 +1,278 @@
+/* ------------------------------------------------------------------ *
+ *  Archive shelf — frosted folders on an isometric row               *
+ *  (the project page, flyer, caps and sr-only come from style.css)    *
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* grey film grain (image 1) — a tiny SVG noise tile */
+  --noise: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body.iso-page {
+  --bg: #ffffff; /* the project page opens on white too */
+  background: #ffffff;
+}
+
+.iso {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.iso.is-hover { cursor: pointer; }
+.iso.is-dragging { cursor: grabbing; }
+
+.iso__row {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.iso__grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  background-image: var(--noise);
+  background-size: 180px;
+  opacity: 0.28;
+  mix-blend-mode: soft-light;
+}
+
+/* ---------- Card: one frosted folder ---------- */
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.card > *,
+.card__pane > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* paper sheet behind the photo */
+.card__paper {
+  border-radius: calc(var(--r) * 0.7);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f1ee 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.card__paper::before {
+  /* a few ruled lines, like a document */
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 34%;
+  top: 7%;
+  height: 16%;
+  background: repeating-linear-gradient(180deg, rgba(21, 21, 21, 0.13) 0 1px, transparent 1px 7px);
+}
+
+/* the sharp photo inside the folder */
+.card__photo {
+  overflow: hidden;
+  border-radius: calc(var(--r) * 0.7);
+  background: #d6d6d2;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+.card__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease);
+}
+.card__photo img.is-loaded { opacity: 1; }
+
+/* thickness of the glass (three stacked outlines) */
+.card__edge {
+  background: linear-gradient(180deg, #fbfdff 0%, #dde5ee 45%, #c1cbd7 100%);
+}
+
+/* ---------- The frosted front glass ---------- */
+.card__pane { overflow: hidden; }
+
+.pane__base {
+  /* what you see through the glass where nothing stands behind it */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #e1e8f0 0%, #ccd5e0 100%);
+}
+.pane__paper {
+  border-radius: calc(var(--r) * 0.7);
+  background: #fff;
+  filter: blur(var(--blur));
+}
+.pane__img {
+  /* the photo seen through frosted glass: blurred, a touch richer */
+  display: block;
+  object-fit: cover;
+  filter: blur(var(--blur)) saturate(1.45);
+  opacity: 0;
+  transition: opacity 0.9s var(--ease);
+}
+.pane__img.is-loaded { opacity: 1; }
+.pane__veil {
+  /* the milk in the glass, faintly blue; its opacity thins on hover (set from JS) */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(243, 248, 254, 0.82) 0%, rgba(226, 235, 246, 0.68) 55%, rgba(203, 215, 230, 0.86) 100%);
+}
+.pane__grain {
+  width: 100%;
+  height: 100%;
+  background-image: var(--noise);
+  background-size: 140px;
+  opacity: 0.45;
+  mix-blend-mode: overlay;
+}
+.pane__sheen {
+  /* light falling across the face */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(116deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 34%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, 0.22) 100%);
+}
+.pane__rim { overflow: visible; }
+.pane__rim path {
+  /* half of this is clipped off by the glass outline: a crisp 1px inner rim */
+  fill: none;
+  stroke: rgba(247, 251, 255, 0.95);
+  stroke-width: 2;
+}
+
+/* the studio card is the dark folder of image 2 */
+.card.is-dark .card__edge { background: linear-gradient(180deg, #4a4a48 0%, #1d1d1c 50%, #0b0b0b 100%); }
+.card.is-dark .pane__base { background: linear-gradient(180deg, #1c1c1b, #0a0a0a); }
+.card.is-dark .pane__paper { background: #3a3a38; }
+.card.is-dark .pane__veil {
+  background: linear-gradient(180deg, rgba(26, 31, 39, 0.55) 0%, rgba(12, 15, 20, 0.62) 60%, rgba(5, 6, 8, 0.8) 100%);
+}
+.card.is-dark .pane__sheen {
+  background: linear-gradient(116deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 36%);
+}
+.card.is-dark .pane__rim path { stroke: rgba(255, 255, 255, 0.28); }
+
+/* ---------- hover label on the floor ---------- */
+/* The transform (a floor matrix) is set from shelf.js every frame. The label
+   reads down-right, the opposite lean to the shelf, letters standing up-right. */
+.tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  transform-origin: 0 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.tag__text { white-space: nowrap; }
+.tag__term {
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: #8b8b86;
+}
+.tag__word {
+  font-size: var(--tag-word, 28px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #1b1b1a;
+}
+.tag__meta {
+  margin-top: 0.7em;
+  color: #6f6f6a;
+  font-variant-numeric: tabular-nums;
+}
+.tag__rule {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(21, 21, 21, 0.5), rgba(21, 21, 21, 0.18));
+  transform-origin: 0 50%;
+}
+.tag__dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1b1b1a;
+  box-shadow: 0 0 0 3px rgba(27, 27, 26, 0.08);
+}
+.tag__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.tag__in { display: inline-block; }
+
+/* ---------- term : definition (image 1's typography, flat) ---------- */
+.def {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+.def--top {
+  left: clamp(18px, 5.5vw, 96px);
+  top: clamp(40px, 9vh, 110px);
+}
+.def--bottom {
+  right: clamp(18px, 5vw, 90px);
+  bottom: clamp(40px, 9vh, 120px);
+  width: min(20em, 44vw);
+}
+.def__term {
+  font-size: clamp(12px, 1.1vw, 17px);
+  font-weight: 500;
+  color: #8b8b86;
+  margin-bottom: 0.7em;
+}
+.def__word {
+  font-size: clamp(30px, 4.2vw, 66px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #1b1b1a;
+  white-space: nowrap;
+}
+.def--bottom .def__word { font-size: clamp(26px, 3.3vw, 52px); }
+.def__sub {
+  margin-top: 1.4em;
+  color: #6f6f6a;
+}
+.def__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.def__in { display: inline-block; }
+
+/* ---------- top bar ---------- */
+.iso__bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 8;
+  padding: clamp(16px, 3vh, 32px) clamp(16px, 3.5vw, 48px);
+}
+.iso__mark {
+  display: block;
+  width: 30px;
+  height: 30px;
+  color: var(--ink);
+}
+.iso__mark svg { width: 100%; height: 100%; fill: currentColor; }
+.iso__mark:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+
+@media (max-width: 599px) {
+  .def--top { top: 72px; }
+  .def--bottom { bottom: 56px; }
+}
