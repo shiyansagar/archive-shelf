@@ -9,16 +9,16 @@ export const params = {
   hoverSpeed: 0, // share of that speed kept while a card is hovered (0 = comes to rest)
   slowDown: 2.8, // how fast it eases into the hover speed (higher = sooner)
   speedUp: 1.1, // how fast it picks up again afterwards
-  size: 0.15, // card width as a share of the screen height
-  gap: 0.62, // distance between cards, as a share of a card's width (more = clearer gaps)
+  size: 0.14, // card width as a share of the screen height
+  gap: 1.15, // distance between cards, as a share of a card's width (more = clearer gaps)
   lift: 0.24, // hovered card rises by this share of its height...
-  peek: 0.13, // ...its photo rises this much more out of the folder...
+  peek: 0.18, // ...its photo rises this much more out of the folder...
   paper: 0.06, // ...and the paper sheet behind the photo this much
-  neighbour: 0.12, // the cards either side rise this share of the hovered lift (0 = off)
+  neighbour: 0.16, // the cards either side rise this share of the hovered lift (0 = off)
   rowX: 0.5, // where the middle of the shelf sits, share of the screen width
-  rowY: 0.56, // ...and share of the screen height
+  rowY: 0.5, // ...and share of the screen height
   frost: 0.62, // milkiness of the glass at rest (0 = clear)
-  frostHover: 0.3, // ...and on the hovered card
+  frostHover: 0.45, // ...and on the hovered card
   tagSize: 1, // size of the hover label's title (1 = default)
 };
 
